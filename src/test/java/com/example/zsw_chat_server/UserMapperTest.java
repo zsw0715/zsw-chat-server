@@ -26,11 +26,12 @@ public class UserMapperTest {
 	// 测试插入用户
 	@Test
 	public void testInsert() {
+		// 创建初始用户 张珅玮
 		User user = new User();
 		user.setUid(1000000L);
-		user.setUsername("Allan");
-		user.setPassword("123456");
-		user.setEmail("allan@test.com");
+		user.setUsername("张珅玮");
+		user.setPassword("admin123");
+		user.setEmail("shenweizhang0715@outlook.com");
 		user.setCreated_at(LocalDateTime.now());
 		user.setLast_login_at(LocalDateTime.now());
 		user.setGender(1);
@@ -62,6 +63,12 @@ public class UserMapperTest {
 	@Test
 	public void testDelete() {
 		userMapper.delete(null);
+	}
+
+	// 测试 删除用户 by id
+	@Test
+	public void testDeleteById() {
+		userMapper.deleteById(1000000L);
 	}
 
 }
