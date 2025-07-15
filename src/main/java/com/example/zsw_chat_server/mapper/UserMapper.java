@@ -8,5 +8,5 @@ import com.example.zsw_chat_server.entity.User;
 
 @Mapper
 public interface UserMapper extends BaseMapper<User> {
-
+	User selectByEmail(String email);
 }
