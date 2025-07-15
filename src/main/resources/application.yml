@@ -6,4 +6,4 @@ spring:
 
 logging:
   level:
-    com.zsw.chat.mapper: debug
+    com.example.zsw_chat_server.mapper: debug
