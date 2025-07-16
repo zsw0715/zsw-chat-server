@@ -14,6 +14,6 @@ public class SwaggerConfig {
             .info(new Info()
                 .title("ZSW Chat Server API 文档")
                 .version("v1.0.0")
-                .description("API 文档? 我也不知道写什么"));
+                .description("API 文档? API 文档！"));
     }
 }

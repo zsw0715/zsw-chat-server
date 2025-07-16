@@ -14,12 +14,21 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import com.example.zsw_chat_server.util.JwtUtil;
 
 import java.util.List;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
+
+    private final JwtUtil jwtUtil;
+
+    public SecurityConfig(JwtUtil jwtUtil) {
+        this.jwtUtil = jwtUtil;
+    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -46,6 +55,7 @@ public class SecurityConfig {
                 .requestMatchers("/api/auth/**").permitAll() // ✅ 放开 auth 接口
                 .anyRequest().authenticated()
             )
+            .addFilterBefore(new JwtAuthenticationFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class) // ✅ 添加 JWT 过滤器
             .cors()  // ✅ 启用 CORS
             .and()
             .httpBasic()
