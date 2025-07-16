@@ -15,7 +15,7 @@ import java.util.Map;
 @Component
 public class JwtUtil {
 	private static final Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256); // 安全密钥
-	private static final long EXPIRATION_TIME = 3600000; // 1小时（毫秒）
+	private static final long EXPIRATION_TIME = 24 * 60 * 60 * 1000; // 1天
 
 	// 生成 JWT 令牌
 	public String generateToken(User user) {

@@ -33,8 +33,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
 		// 设置创建时间
 		user.setCreated_at(LocalDateTime.now());
-		// 设置用户名 -- 默认和邮箱一致，用户可以之后修改
-		user.setUsername(user.getEmail());
+		// 设置用户名 -- 默认是unnameed，用户可以之后修改
+		user.setUsername("unnameed");
 		// 设置gender -- 默认 2 未知
 		user.setGender(2);
 		// 调用 MyBatis - Plus 通用方法保存
