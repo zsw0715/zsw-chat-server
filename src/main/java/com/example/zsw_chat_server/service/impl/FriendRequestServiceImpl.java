@@ -8,9 +8,17 @@ import com.example.zsw_chat_server.service.FriendRequestService;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class FriendRequestServiceImpl extends ServiceImpl<FriendRequestMapper, FriendRequest> implements FriendRequestService {
+
+	private final FriendRequestMapper friendRequestMapper;
+
+	public FriendRequestServiceImpl(FriendRequestMapper friendRequestMapper) {
+		this.friendRequestMapper = friendRequestMapper;
+	}
 
 	@Override
 	public boolean applyFriendRequest(Long fromUid, Long toUid) {
@@ -38,6 +46,11 @@ public class FriendRequestServiceImpl extends ServiceImpl<FriendRequestMapper, F
 		request.setStatus(0);
 		request.setRequestTime(LocalDateTime.now());
 		return this.save(request);
+	}
+
+	@Override
+	public List<Map<String, Object>> getPendingRequests(Long toUid) {
+		return friendRequestMapper.getPendingRequestsByToUid(toUid);
 	}
 	
 }

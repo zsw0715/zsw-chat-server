@@ -3,6 +3,7 @@ package com.example.zsw_chat_server.controller;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 // import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -12,6 +13,9 @@ import jakarta.servlet.http.HttpServletRequest;
 
 import com.example.zsw_chat_server.service.FriendRequestService;
 import com.example.zsw_chat_server.util.JwtUtil;
+
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/friend")
@@ -43,5 +47,23 @@ public class FriendController {
 		return new ResponseEntity<>("好友申请发送失败", HttpStatus.BAD_REQUEST);
 	}
 	
-	
+	@GetMapping("/requests")
+	public ResponseEntity<?> getFriendRequests(HttpServletRequest request) {
+		System.out.println(">>>> getFriendRequests 被调用了");
+
+		Long fromUid = jwtUtil.getUidFromRequest(request);
+		if (fromUid == null) {
+			return new ResponseEntity<>("用户未登录", HttpStatus.UNAUTHORIZED);
+		}
+
+		List<Map<String, Object>> pendingRequests = friendRequestService.getPendingRequests(fromUid);
+		if (pendingRequests.isEmpty()) {
+			return new ResponseEntity<>("没有待处理的好友申请", HttpStatus.OK);
+		}
+		
+		return new ResponseEntity<>(pendingRequests, HttpStatus.OK);
+
+	}
+
+
 }
