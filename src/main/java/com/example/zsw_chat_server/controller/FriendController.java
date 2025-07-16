@@ -30,7 +30,7 @@ public class FriendController {
 
 		Long fromUid = jwtUtil.getUidFromRequest(request);
 		if (fromUid == null) {
-			return new ResponseEntity<>("用户未登录", HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>("用户未登录", HttpStatus.UNAUTHORIZED);
 		}
 		if (toUid == null) {
 			return new ResponseEntity<>("目标用户ID不能为空", HttpStatus.BAD_REQUEST);
