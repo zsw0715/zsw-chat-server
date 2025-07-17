@@ -195,7 +195,7 @@ public class FriendController {
 		if (onlyFriend) {
 			result = friendService.searchMyFriendByKeyword(uid, type, keyword);
 		} else {
-			result = friendService.searchAllUsersExcludingFriends(uid, type, keyword);
+			result = friendService.searchAllUsersByKeyword(uid, type, keyword);
 		}
 
 		return new ResponseEntity<>(result, HttpStatus.OK);

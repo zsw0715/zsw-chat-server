@@ -35,8 +35,24 @@ public interface FriendService extends IService<Friend> {
 	 */
 	boolean deleteFriend(Long userId, Long friendUid);
 	
+	/**
+	 * 搜索好友 ( 只搜索好友 ), 根据用户名或邮箱搜索
+	 * 
+	 * @param uid 当前用户UID
+	 * @param type 搜索类型 ( username, email )
+	 * @param keyword 搜索关键词
+	 * @return 搜索结果
+	 */
 	List<Map<String, Object>> searchMyFriendByKeyword(Long uid, String type, String keyword);
 
-	List<Map<String, Object>> searchAllUsersExcludingFriends(Long uid, String type, String keyword);
+	/**
+	 * 搜索users表, 根据用户名或邮箱搜
+	 * 
+	 * @param uid 当前用户UID
+	 * @param type 搜索类型 ( username, email )
+	 * @param keyword 搜索关键词
+	 * @return 搜索结果
+	 */
+	List<Map<String, Object>> searchAllUsersByKeyword(Long uid, String type, String keyword);
 	
 }
