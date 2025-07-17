@@ -13,14 +13,16 @@ import java.util.Map;
 public interface FriendMapper extends BaseMapper<Friend> {
 	
 	@Select("""
-		select 
+		select
 			u.uid,
 			u.username,
 			u.avatar,
 			u.email,
 			u.gender,
 			u.last_login_at,
-			u.created_at
+			u.created_at,
+			f.friend_nickname,
+			f.become_friend_time
 		from friend f
 		join users u on f.friend_uid = u.uid
 		where f.user_id = #{uid}
