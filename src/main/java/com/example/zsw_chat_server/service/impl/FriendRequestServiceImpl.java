@@ -143,8 +143,7 @@ public class FriendRequestServiceImpl extends ServiceImpl<FriendRequestMapper, F
 	 */
 	@Override
 	public List<Map<String, Object>> getFriendList(Long uid) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Unimplemented method 'getFriendList'");
+		return friendMapper.getFriendListByUid(uid);
 	}
 	
 }

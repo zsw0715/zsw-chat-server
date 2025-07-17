@@ -80,7 +80,7 @@ public class FriendController {
 	@PostMapping("/reject")
 	public ResponseEntity<?> rejectRequest(@RequestParam Long requestId, HttpServletRequest request) {
 		System.out.println(">>>> rejectRequest 被调用了");
-		
+
 		Long uid = jwtUtil.getUidFromRequest(request);
 		if (uid == null) {
 			return new ResponseEntity<>("未登录", HttpStatus.UNAUTHORIZED);
@@ -88,6 +88,17 @@ public class FriendController {
 
 		boolean success = friendRequestService.rejectRequest(requestId, uid);
 		return success ? new ResponseEntity<>("好友申请已拒绝", HttpStatus.OK) : new ResponseEntity<>("好友申请拒绝失败", HttpStatus.BAD_REQUEST);
+	}
+
+	@GetMapping("/list")
+	public ResponseEntity<?> getFriendList(HttpServletRequest request) {
+		Long uid = jwtUtil.getUidFromRequest(request);
+		if (uid == null) {
+			return new ResponseEntity<>("未登录", HttpStatus.UNAUTHORIZED);
+		}
+	
+		List<Map<String, Object>> friends = friendRequestService.getFriendList(uid);
+		return new ResponseEntity<>(friends, HttpStatus.OK);
 	}
 
 
