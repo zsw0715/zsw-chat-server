@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import jakarta.servlet.http.HttpServletRequest;
 
 import com.example.zsw_chat_server.service.FriendRequestService;
+import com.example.zsw_chat_server.service.FriendService;
 import com.example.zsw_chat_server.util.JwtUtil;
 
 import java.util.List;
@@ -22,12 +23,21 @@ import java.util.Map;
 public class FriendController {
 	private final FriendRequestService friendRequestService;
 	private final JwtUtil jwtUtil;
-
-	public FriendController(FriendRequestService friendRequestService, JwtUtil jwtUtil) {
+	private final FriendService friendService;
+	
+	public FriendController(FriendRequestService friendRequestService, JwtUtil jwtUtil, FriendService friendService) {
 		this.friendRequestService = friendRequestService;
 		this.jwtUtil = jwtUtil;
+		this.friendService = friendService;
 	}
 
+	/**
+	 * 发送好友申请
+	 * 
+	 * @param toUid 目标用户ID
+	 * @param request 请求对象
+	 * @return 好友申请发送成功或失败
+	 */
 	@PostMapping("/apply")
 	public ResponseEntity<String> applyFriendRequest(@RequestParam Long toUid, HttpServletRequest request) {
 		System.out.println(">>>> applyFriendRequest 被调用了");
@@ -47,6 +57,12 @@ public class FriendController {
 		return new ResponseEntity<>("好友申请发送失败", HttpStatus.BAD_REQUEST);
 	}
 	
+	/**
+	 * 获取好友申请
+	 * 
+	 * @param request 请求对象
+	 * @return 好友申请列表
+	 */
 	@GetMapping("/requests")
 	public ResponseEntity<?> getFriendRequests(HttpServletRequest request) {
 		System.out.println(">>>> getFriendRequests 被调用了");
@@ -64,6 +80,13 @@ public class FriendController {
 		return new ResponseEntity<>(pendingRequests, HttpStatus.OK);
 	}
 
+	/**
+	 * 接受好友申请
+	 * 
+	 * @param requestId 请求ID
+	 * @param request 请求对象
+	 * @return 好友申请接受成功或失败
+	 */
     @PostMapping("/accept")
 	public ResponseEntity<?> acceptRequest(@RequestParam Long requestId, HttpServletRequest request) {
 		System.out.println(">>>> acceptRequest 被调用了");
@@ -77,6 +100,13 @@ public class FriendController {
 		return success ? new ResponseEntity<>("好友申请已接受", HttpStatus.OK) : new ResponseEntity<>("好友申请接受失败", HttpStatus.BAD_REQUEST);
 	}
 
+	/**
+	 * 拒绝好友申请
+	 * 
+	 * @param requestId 请求ID
+	 * @param request 请求对象
+	 * @return 好友申请拒绝成功或失败
+	 */
 	@PostMapping("/reject")
 	public ResponseEntity<?> rejectRequest(@RequestParam Long requestId, HttpServletRequest request) {
 		System.out.println(">>>> rejectRequest 被调用了");
@@ -90,6 +120,12 @@ public class FriendController {
 		return success ? new ResponseEntity<>("好友申请已拒绝", HttpStatus.OK) : new ResponseEntity<>("好友申请拒绝失败", HttpStatus.BAD_REQUEST);
 	}
 
+	/**
+	 * 获取好友列表
+	 * 
+	 * @param request 请求对象
+	 * @return 好友列表
+	 */
 	@GetMapping("/list")
 	public ResponseEntity<?> getFriendList(HttpServletRequest request) {
 		Long uid = jwtUtil.getUidFromRequest(request);
@@ -97,10 +133,18 @@ public class FriendController {
 			return new ResponseEntity<>("未登录", HttpStatus.UNAUTHORIZED);
 		}
 	
-		List<Map<String, Object>> friends = friendRequestService.getFriendList(uid);
+		List<Map<String, Object>> friends = friendService.getFriendList(uid);
 		return new ResponseEntity<>(friends, HttpStatus.OK);
 	}
 
+	/**
+	 * 更新好友备注
+	 * 
+	 * @param friendUid 好友ID
+	 * @param remark 备注
+	 * @param request 请求对象
+	 * @return 备注更新成功或失败
+	 */
 	@PostMapping("/remark")
 	public ResponseEntity<?> updateRemark(@RequestParam Long friendUid, @RequestParam String remark, HttpServletRequest request) {
 		Long userId = jwtUtil.getUidFromRequest(request);
@@ -108,11 +152,18 @@ public class FriendController {
 			return new ResponseEntity<>("未登录", HttpStatus.UNAUTHORIZED);
 		}
 	
-		boolean success = friendRequestService.updateFriendRemark(userId, friendUid, remark);
+		boolean success = friendService.updateFriendRemark(userId, friendUid, remark);
 		return success ? new ResponseEntity<>("备注更新成功", HttpStatus.OK)
 					   : new ResponseEntity<>("备注更新失败", HttpStatus.BAD_REQUEST);
 	}
 
+	/**
+	 * 删除好友 ( 双向删除 )
+	 * 
+	 * @param friendUid 好友ID
+	 * @param request 请求对象
+	 * @return 删除成功或失败
+	 */
 	@PostMapping("/delete")
 	public ResponseEntity<?> deleteFriend(@RequestParam Long friendUid, HttpServletRequest request) {
 		Long uid = jwtUtil.getUidFromRequest(request);
@@ -120,9 +171,36 @@ public class FriendController {
 			return new ResponseEntity<>("未登录", HttpStatus.UNAUTHORIZED);
 		}
 	
-		boolean success = friendRequestService.deleteFriend(uid, friendUid);
+		boolean success = friendService.deleteFriend(uid, friendUid);
 		return success ? new ResponseEntity<>("删除成功", HttpStatus.OK) : new ResponseEntity<>("删除失败", HttpStatus.BAD_REQUEST);
 	}
+
+	/**
+	 * 搜索好友
+	 * 
+	 * @param type 搜索类型 ( username, email )
+	 * @param keyword 搜索关键词
+	 * @param onlyFriend 是否只搜索好友
+	 * @param request 请求对象
+	 * @return 搜索结果
+	 */
+	@GetMapping("/search")
+	public ResponseEntity<?> searchFriend(@RequestParam String type, @RequestParam String keyword, @RequestParam boolean onlyFriend, HttpServletRequest request) {
+		Long uid = jwtUtil.getUidFromRequest(request);
+		if (uid == null) {
+			return new ResponseEntity<>("未登录", HttpStatus.UNAUTHORIZED);
+		}
+
+		List<Map<String, Object>> result;
+		if (onlyFriend) {
+			result = friendService.searchMyFriendByKeyword(uid, type, keyword);
+		} else {
+			result = friendService.searchAllUsersExcludingFriends(uid, type, keyword);
+		}
+
+		return new ResponseEntity<>(result, HttpStatus.OK);
+	}
+
 
 
 }
