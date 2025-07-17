@@ -22,4 +22,7 @@ public class Friend {
 	@TableField("become_friend_time")
     private LocalDateTime createTime;
 
+	@TableField("friend_nickname")
+	private String remark;
+
 }

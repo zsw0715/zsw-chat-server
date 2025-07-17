@@ -101,5 +101,17 @@ public class FriendController {
 		return new ResponseEntity<>(friends, HttpStatus.OK);
 	}
 
+	@PostMapping("/remark")
+	public ResponseEntity<?> updateRemark(@RequestParam Long friendUid, @RequestParam String remark, HttpServletRequest request) {
+		Long userId = jwtUtil.getUidFromRequest(request);
+		if (userId == null) {
+			return new ResponseEntity<>("未登录", HttpStatus.UNAUTHORIZED);
+		}
+	
+		boolean success = friendRequestService.updateFriendRemark(userId, friendUid, remark);
+		return success ? new ResponseEntity<>("备注更新成功", HttpStatus.OK)
+					   : new ResponseEntity<>("备注更新失败", HttpStatus.BAD_REQUEST);
+	}
+
 
 }

@@ -51,4 +51,14 @@ public interface FriendRequestService extends IService<FriendRequest> {
 	 */
 	List<Map<String, Object>> getFriendList(Long uid);
 
+	/**
+	 * 更新好友备注
+	 * 
+	 * @param userId 当前用户UID
+	 * @param friendUid 好友UID
+	 * @param remark 备注
+	 * @return 是否成功
+	 */
+	boolean updateFriendRemark(Long userId, Long friendUid, String remark);
+
 }
