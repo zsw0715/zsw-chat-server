@@ -60,9 +60,34 @@ public class FriendController {
 		if (pendingRequests.isEmpty()) {
 			return new ResponseEntity<>("没有待处理的好友申请", HttpStatus.OK);
 		}
-		
-		return new ResponseEntity<>(pendingRequests, HttpStatus.OK);
 
+		return new ResponseEntity<>(pendingRequests, HttpStatus.OK);
+	}
+
+    @PostMapping("/accept")
+	public ResponseEntity<?> acceptRequest(@RequestParam Long requestId, HttpServletRequest request) {
+		System.out.println(">>>> acceptRequest 被调用了");
+
+		Long uid = jwtUtil.getUidFromRequest(request);
+		if (uid == null) {
+			return new ResponseEntity<>("未登录", HttpStatus.UNAUTHORIZED);
+		}
+
+		boolean success = friendRequestService.acceptRequest(requestId, uid);
+		return success ? new ResponseEntity<>("好友申请已接受", HttpStatus.OK) : new ResponseEntity<>("好友申请接受失败", HttpStatus.BAD_REQUEST);
+	}
+
+	@PostMapping("/reject")
+	public ResponseEntity<?> rejectRequest(@RequestParam Long requestId, HttpServletRequest request) {
+		System.out.println(">>>> rejectRequest 被调用了");
+		
+		Long uid = jwtUtil.getUidFromRequest(request);
+		if (uid == null) {
+			return new ResponseEntity<>("未登录", HttpStatus.UNAUTHORIZED);
+		}
+
+		boolean success = friendRequestService.rejectRequest(requestId, uid);
+		return success ? new ResponseEntity<>("好友申请已拒绝", HttpStatus.OK) : new ResponseEntity<>("好友申请拒绝失败", HttpStatus.BAD_REQUEST);
 	}
 
 

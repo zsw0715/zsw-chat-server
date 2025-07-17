@@ -25,4 +25,30 @@ public interface FriendRequestService extends IService<FriendRequest> {
 	 */
 	List<Map<String, Object>> getPendingRequests(Long toUid);
 
+	/**
+	 * 接受好友申请
+	 * 
+	 * @param requestId 请求ID
+	 * @param currentUid 当前用户UID
+	 * @return 是否成功
+	 */
+	boolean acceptRequest(Long requestId, Long currentUid);
+
+	/**
+	 * 拒绝好友申请
+	 * 
+	 * @param requestId 请求ID
+	 * @param currentUid 当前用户UID
+	 * @return success or fail
+	 */
+    boolean rejectRequest(Long requestId, Long currentUid);
+
+	/**
+	 * 获取好友列表
+	 * 
+	 * @param uid 当前用户UID
+	 * @return 好友列表
+	 */
+	List<Map<String, Object>> getFriendList(Long uid);
+
 }
