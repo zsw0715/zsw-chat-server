@@ -113,5 +113,16 @@ public class FriendController {
 					   : new ResponseEntity<>("备注更新失败", HttpStatus.BAD_REQUEST);
 	}
 
+	@PostMapping("/delete")
+	public ResponseEntity<?> deleteFriend(@RequestParam Long friendUid, HttpServletRequest request) {
+		Long uid = jwtUtil.getUidFromRequest(request);
+		if (uid == null) {
+			return new ResponseEntity<>("未登录", HttpStatus.UNAUTHORIZED);
+		}
+	
+		boolean success = friendRequestService.deleteFriend(uid, friendUid);
+		return success ? new ResponseEntity<>("删除成功", HttpStatus.OK) : new ResponseEntity<>("删除失败", HttpStatus.BAD_REQUEST);
+	}
+
 
 }

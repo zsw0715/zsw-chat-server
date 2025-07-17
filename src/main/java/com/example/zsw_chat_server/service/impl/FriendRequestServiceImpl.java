@@ -163,5 +163,23 @@ public class FriendRequestServiceImpl extends ServiceImpl<FriendRequestMapper, F
 			.set("friend_nickname", remark);
 		return friendMapper.update(updateWrapper) > 0;
 	}
+
+	/**
+	 * 删除好友
+	 * 
+	 * @param userId 当前用户UID
+	 * @param friendUid 好友UID
+	 * @return 是否成功
+	 */
+	@Override
+	public boolean deleteFriend(Long userId, Long friendUid) {
+		QueryWrapper<Friend> wrapper = new QueryWrapper<>();
+		wrapper.and(w -> 
+			w.eq("user_id", userId).eq("friend_uid", friendUid)
+			 .or()
+			 .eq("user_id", friendUid).eq("friend_uid", userId)
+		);
+		return friendMapper.delete(wrapper) > 0;
+	}
 	
 }

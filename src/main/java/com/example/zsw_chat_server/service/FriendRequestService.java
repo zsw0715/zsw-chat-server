@@ -61,4 +61,13 @@ public interface FriendRequestService extends IService<FriendRequest> {
 	 */
 	boolean updateFriendRemark(Long userId, Long friendUid, String remark);
 
+	/**
+	 * 删除好友
+	 * 
+	 * @param userId 当前用户UID
+	 * @param friendUid 好友UID
+	 * @return 是否成功
+	 */
+	boolean deleteFriend(Long userId, Long friendUid);
+
 }
