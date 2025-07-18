@@ -74,6 +74,15 @@ public class FriendRequestServiceImpl extends ServiceImpl<FriendRequestMapper, F
 		return friendRequestMapper.getPendingRequestsByToUid(toUid);
 	}
 
+	@Override
+	public boolean isFriendRequestPending(Long fromUid, Long toUid) {
+		QueryWrapper<FriendRequest> queryWrapper = new QueryWrapper<>();
+		queryWrapper.eq("from_uid", fromUid)
+					.eq("to_uid", toUid)
+					.eq("status", 0); // 待处理状态
+		return this.count(queryWrapper) > 0;
+	}
+
 	/**
 	 * 接受好友申请
 	 * 

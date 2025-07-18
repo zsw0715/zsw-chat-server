@@ -14,3 +14,8 @@ spring:
 logging:
   level:
     com.example.zsw_chat_server.mapper: debug
+
+mybatis-plus:
+  global-config:
+    db-config:
+      id-type: auto

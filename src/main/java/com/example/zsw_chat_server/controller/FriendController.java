@@ -201,6 +201,23 @@ public class FriendController {
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 
+	/**
+	 * 根据 toUid 获取 是否这个 人 是否已经点过 添加好友 按钮
+	 * 
+	 * @param toUid 目标用户ID
+	 * @param request 请求对象
+	 * @return 是否已经添加过
+	 */
+	@GetMapping("/is-friend-request-pending")
+	public ResponseEntity<?> isFriendRequestPending(@RequestParam Long toUid, HttpServletRequest request) {
+		Long fromUid = jwtUtil.getUidFromRequest(request);
+		if (fromUid == null) {
+			return new ResponseEntity<>("未登录", HttpStatus.UNAUTHORIZED);
+		}
+
+		boolean isPending = friendRequestService.isFriendRequestPending(fromUid, toUid);
+		return isPending ? new ResponseEntity<>("对方正在处理中", HttpStatus.OK) : new ResponseEntity<>("toUid 有问题，或者还没有发送好友请求", HttpStatus.OK);
+	}
 
 
 }

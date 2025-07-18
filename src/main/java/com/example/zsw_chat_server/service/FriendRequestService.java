@@ -26,6 +26,14 @@ public interface FriendRequestService extends IService<FriendRequest> {
 	List<Map<String, Object>> getPendingRequests(Long toUid);
 
 	/**
+	 * 根据 toUid 获取 是否这个好友已经添加过了
+	 * 
+	 * @param currentUid 当前用户UID
+	 * @return 好友申请列表
+	 */
+	boolean isFriendRequestPending(Long fromUid, Long toUid);
+
+	/**
 	 * 接受好友申请
 	 * 
 	 * @param requestId 请求ID
