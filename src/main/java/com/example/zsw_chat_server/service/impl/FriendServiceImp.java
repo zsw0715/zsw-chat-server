@@ -109,6 +109,11 @@ public class FriendServiceImp extends ServiceImpl<FriendMapper, Friend> implemen
 			String field = type.equals("email") ? (String) friend.get("email") : (String) friend.get("username");
 			if (field != null && field.contains(keyword)) {
 				friend.put("isFriend", true); // 标记是好友
+
+				// 如果是自己，加上 isYourself 标记
+				Long friendId = (Long) friend.get("uid");
+				friend.put("isYourself", uid.equals(friendId));
+
 				filteredFriendList.add(friend);
 				friendUidSet.add((Long) friend.get("uid"));
 			}
@@ -124,6 +129,10 @@ public class FriendServiceImp extends ServiceImpl<FriendMapper, Friend> implemen
 			Long userId = (Long) user.get("uid");
 			if (!friendUidSet.contains(userId)) {
 				user.put("isFriend", false); // 标记非好友
+
+				// 如果是自己，加上 isYourself 标记
+				user.put("isYourself", uid.equals(userId));
+				
 				strangerList.add(user);
 			}
 		}
