@@ -17,6 +17,7 @@ import com.example.zsw_chat_server.util.JwtUtil;
 
 import java.util.List;
 import java.util.Map;
+import java.util.HashMap;
 
 @RestController
 @RequestMapping("/api/friend")
@@ -216,7 +217,10 @@ public class FriendController {
 		}
 
 		boolean isPending = friendRequestService.isFriendRequestPending(fromUid, toUid);
-		return isPending ? new ResponseEntity<>("对方正在处理中", HttpStatus.OK) : new ResponseEntity<>("toUid 有问题，或者还没有发送好友请求", HttpStatus.OK);
+		Map<String, Object> result = new HashMap<>();
+		result.put("isPending", isPending);
+		result.put("msg", isPending ? "对方正在处理中" : "还没有发送请求");
+		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 
 
