@@ -12,7 +12,7 @@ import lombok.Data;
 
 @Data
 @TableName("friend")
-public class Friend {
+public class Friend implements Serializable {
 	@TableId(type = IdType.AUTO)
 	private Long id;
 
